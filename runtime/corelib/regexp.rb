@@ -17,7 +17,7 @@ class Regexp
 
   def =~(string)
     %x{
-      var result        = self.exec(string);
+      var result       = self.exec(string);
       $opal.match_data = result;
 
       return result ? result.index : nil;
@@ -30,10 +30,10 @@ class Regexp
     `self.toString()`
   end
 
-  def match(pattern)
-    self =~ pattern
-
-    $~
+  def match(string, pos = undefined, &block)
+    if self =~ (Opal.undefined?(pos) ? string : string.substr(pos))
+      block ? block.call($~) : $~
+    end
   end
 
   def to_native
